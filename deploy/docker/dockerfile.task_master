@@ -1,0 +1,11 @@
+FROM python:3.13-slim
+
+WORKDIR /
+RUN mkdir -p services/task_master
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY services/task_master /services/task_master
+
+CMD ["uvicorn", "services.task_master.main:app", "--host", "0.0.0.0", "--port", "8000"]
