@@ -3,9 +3,9 @@ apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
   - role: control-plane
     extraPortMappings:
-      # Task Master
-      - containerPort: 8000
-        hostPort: 8000
-      # Image Server
-      - containerPort: 8001
-        hostPort: 8001
+      - containerPort: 30080   # port exposed by Traefik Service NodePort
+        hostPort: 30080        # port on your host machine
+        protocol: TCP
+      - containerPort: 30081   # Traefik dashboard NodePort
+        hostPort: 30081
+        protocol: TCP

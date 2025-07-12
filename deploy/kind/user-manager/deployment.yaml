@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-manager-deployment
+  labels:
+    app: user-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-manager
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: user-manager
+    spec:
+      containers:
+        - name: user-manager
+          image: faas/user-manager:0.0.1
+          ports:
+            - containerPort: 8000

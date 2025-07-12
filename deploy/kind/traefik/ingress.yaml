@@ -1,0 +1,60 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: localhost
+      http:
+        paths:
+
+          # Task Master
+          - path: /tasks
+            pathType: Prefix
+            backend:
+              service:
+                name: task-master-service
+                port:
+                  number: 8000
+          - path: /add
+            pathType: Prefix
+            backend:
+              service:
+                name: task-master-service
+                port:
+                  number: 8000
+          - path: /delete
+            pathType: Prefix
+            backend:
+              service:
+                name: task-master-service
+                port:
+                  number: 8000
+
+          # Image Server
+          - path: /download
+            pathType: Prefix
+            backend:
+              service:
+                name: image-server-service
+                port:
+                  number: 8000
+
+          # User Manager
+          - path: /sign-up
+            pathType: Prefix
+            backend:
+              service:
+                name: user-manager-service
+                port:
+                  number: 8000
+
+          - path: /sign-in
+            pathType: Prefix
+            backend:
+              service:
+                name: user-manager-service
+                port:
+                  number: 8000
