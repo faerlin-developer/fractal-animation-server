@@ -8,6 +8,7 @@ kind-create:
 kind-load:
 	kind load docker-image $(TASK_MASTER_IMAGE) --name $(KIND_CLUSTER)
 	kind load docker-image $(USER_MANAGER_IMAGE) --name $(KIND_CLUSTER)
+	kind load docker-image $(DATABASE_INITIALIZER_IMAGE) --name $(KIND_CLUSTER)
 
 kind-apply:
 
@@ -23,6 +24,10 @@ kind-apply:
 
 	kubectl wait --for=condition=ready pod -l app=postgres --timeout=60s
 
+	# Initialize Database
+	kubectl apply -f deploy/kind/database-initializer/job.yaml
+	kubectl wait --for=condition=complete job/database-initializer-job --timeout=120s
+
 	# Task Master
 	kubectl apply -f deploy/kind/task-master/deployment.yaml
 	kubectl apply -f deploy/kind/task-master/service.yaml
@@ -36,8 +41,6 @@ kind-apply:
 	kubectl apply -f deploy/kind/traefik/deployment.yaml
 	kubectl apply -f deploy/kind/traefik/service.yaml
 	kubectl apply -f deploy/kind/traefik/ingress.yaml
-
-
 
 kind-rollout:
 	kubectl get deployments -o name | xargs -n1 kubectl rollout restart

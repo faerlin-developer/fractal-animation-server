@@ -6,4 +6,4 @@ kubectl-run-psql-client:
 		--image=postgres:14.8 \
   		--env="PGPASSWORD=mypassword" \
   		--restart=Never -- \
-  		psql -h postgres -U myuser -d mydb
+  		psql -h postgres-service -U myuser -d mydb

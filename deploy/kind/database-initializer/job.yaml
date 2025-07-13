@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: database-initializer-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-tables
+          image: faas/database-initializer:0.0.1
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://myuser:mypassword@postgres-service:5432/mydb"
+      restartPolicy: Never
+  backoffLimit: 3
