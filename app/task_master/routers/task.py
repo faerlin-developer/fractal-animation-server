@@ -1,14 +1,18 @@
 from fastapi import APIRouter
 
-from services.task_master.models.task import Task, TaskIn
+from app.task_master.db.connections import r
+from app.task_master.models.task import Task, TaskIn
 
 router = APIRouter()
+
+QUEUE_NAME = "task_queue"
 
 
 @router.post("/add", response_model=Task, status_code=201)
 async def add(task_in: TaskIn):
     data = task_in.model_dump()
     task = {**data, "id": 1}
+    await r.rpush(QUEUE_NAME, "generate_fractal:task_123")
     return task
 
 

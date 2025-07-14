@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from services.user_manager.models.user import UserIn, User
+from app.user_manager.models.user import UserIn, User
 
 router = APIRouter()
 

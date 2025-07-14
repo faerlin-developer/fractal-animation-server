@@ -1,5 +1,5 @@
 
-docker-build: task_master user_manager databse_initializer
+docker-build: task_master user_manager databse_initializer worker
 
 task_master:
 	docker build \
@@ -21,6 +21,14 @@ databse_initializer:
 	docker build \
 		-f deploy/docker/dockerfile.database_initializer \
 		-t $(DATABASE_INITIALIZER_IMAGE) \
+		--build-arg BUILD_REF=$(VERSION) \
+		--build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+		.
+
+worker:
+	docker build \
+		-f deploy/docker/dockerfile.worker \
+		-t $(WORKER_IMAGE) \
 		--build-arg BUILD_REF=$(VERSION) \
 		--build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
 		.

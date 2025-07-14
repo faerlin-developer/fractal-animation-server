@@ -8,6 +8,7 @@ kind-create:
 kind-load:
 	kind load docker-image $(TASK_MASTER_IMAGE) --name $(KIND_CLUSTER)
 	kind load docker-image $(USER_MANAGER_IMAGE) --name $(KIND_CLUSTER)
+	kind load docker-image $(WORKER_IMAGE) --name $(KIND_CLUSTER)
 	kind load docker-image $(DATABASE_INITIALIZER_IMAGE) --name $(KIND_CLUSTER)
 
 kind-apply:
@@ -18,11 +19,20 @@ kind-apply:
 	kubectl apply -f deploy/kind/postgres/deployment.yaml
 	kubectl apply -f deploy/kind/postgres/service.yaml
 
+	kubectl wait --for=condition=ready pod -l app=postgres --timeout=60s
+
 	# Redis
 	kubectl apply -f deploy/kind/redis/deployment.yaml
 	kubectl apply -f deploy/kind/redis/service.yaml
 
-	kubectl wait --for=condition=ready pod -l app=postgres --timeout=60s
+	kubectl wait --for=condition=ready pod -l app=redis --timeout=60s
+
+	# MinIO
+	kubectl apply -f deploy/kind/minio/persistent-volume-claim.yaml
+	kubectl apply -f deploy/kind/minio/deployment.yaml
+	kubectl apply -f deploy/kind/minio/service.yaml
+
+	kubectl wait --for=condition=ready pod -l app=minio --timeout=60s
 
 	# Initialize Database
 	kubectl apply -f deploy/kind/database-initializer/job.yaml
@@ -35,6 +45,10 @@ kind-apply:
 	# User Manager
 	kubectl apply -f deploy/kind/user-manager/deployment.yaml
 	kubectl apply -f deploy/kind/user-manager/service.yaml
+
+	# Worker
+	kubectl apply -f deploy/kind/worker/deployment.yaml
+	kubectl apply -f deploy/kind/worker/service.yaml
 
 	# Traefik
 	kubectl apply -f deploy/kind/traefik/rbac.yaml

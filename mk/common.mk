@@ -8,8 +8,10 @@ VERSION             := 0.0.1
 BASE_IMAGE_NAME     := faas
 TASK_MASTER_APP     := task-master
 USER_MANAGER_APP    := user-manager
+WORKER_APP 		    := worker
 TASK_MASTER_IMAGE   := $(BASE_IMAGE_NAME)/$(TASK_MASTER_APP):$(VERSION)
 USER_MANAGER_IMAGE  := $(BASE_IMAGE_NAME)/$(USER_MANAGER_APP):$(VERSION)
+WORKER_IMAGE        := $(BASE_IMAGE_NAME)/$(WORKER_APP):$(VERSION)
 
 # Jobs
 DATABASE_INITIALIZER_JOB    := database-initializer

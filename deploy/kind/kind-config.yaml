@@ -9,3 +9,9 @@ nodes:
       - containerPort: 30081   # Traefik dashboard NodePort
         hostPort: 30081
         protocol: TCP
+      - containerPort: 30900   # MinIO S3 API
+        hostPort: 30900
+        protocol: TCP
+      - containerPort: 30901   # MinIO Console UI
+        hostPort: 30901
+        protocol: TCP
