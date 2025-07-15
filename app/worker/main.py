@@ -27,7 +27,7 @@ r = redis.Redis(host='redis-service', port=6379)
 client = Minio(
     "172.17.0.1:9000",
     access_key="minioadmin",
-    secret_key="minioadmin123",
+    secret_key="minioadmin",
     secure=False
 )
 

@@ -9,7 +9,7 @@ kind-load:
 	kind load docker-image $(TASK_MASTER_IMAGE) --name $(KIND_CLUSTER)
 	kind load docker-image $(USER_MANAGER_IMAGE) --name $(KIND_CLUSTER)
 	kind load docker-image $(WORKER_IMAGE) --name $(KIND_CLUSTER)
-	kind load docker-image $(DATABASE_INITIALIZER_IMAGE) --name $(KIND_CLUSTER)
+	kind load docker-image $(POSTGRES_IMAGE) --name $(KIND_CLUSTER)
 
 kind-apply:
 
@@ -26,17 +26,6 @@ kind-apply:
 	kubectl apply -f deploy/kind/redis/service.yaml
 
 	kubectl wait --for=condition=ready pod -l app=redis --timeout=60s
-
-	# MinIO
-	kubectl apply -f deploy/kind/minio/persistent-volume-claim.yaml
-	kubectl apply -f deploy/kind/minio/deployment.yaml
-	kubectl apply -f deploy/kind/minio/service.yaml
-
-	kubectl wait --for=condition=ready pod -l app=minio --timeout=60s
-
-	# Initialize Database
-	kubectl apply -f deploy/kind/database-initializer/job.yaml
-	kubectl wait --for=condition=complete job/database-initializer-job --timeout=120s
 
 	# Task Master
 	kubectl apply -f deploy/kind/task-master/deployment.yaml
