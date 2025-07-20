@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from app.task_master.db.connections import r
-from app.task_master.models.task import Task, TaskIn
+from app.task_master.payloads.task import Task, TaskIn
 
 router = APIRouter()
 

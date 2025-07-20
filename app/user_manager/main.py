@@ -1,17 +1,14 @@
-from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
 
-from app.user_manager.routers.user import router as user_router
+import app.common.logger.slog  # noqa: F401
+from app.user_manager.handlers.context import lifespan
+from app.user_manager.handlers.exception import general_exception_handler
+from app.user_manager.handlers.middleware import PreProcessRequest
+from app.user_manager.handlers.routes import router
 
+server = FastAPI(lifespan=lifespan)
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    print("Preparing resources")
-    yield
-    print("Tearing down resources")
-
-
-app = FastAPI(lifespan=lifespan)
-
-app.include_router(user_router)
+# noinspection PyTypeChecker
+server.add_middleware(PreProcessRequest)
+server.add_exception_handler(Exception, general_exception_handler)
+server.include_router(router)

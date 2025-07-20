@@ -5,5 +5,5 @@ httpie-task-master:
 	http -v GET localhost:30080/download body="POST /download"
 
 httpie-user-manager:
-	http -v POST localhost:30080/sign-up body="POST /sign-up"
+	http -v POST localhost:30080/sign-up username="Faerlin" password="<PASSWORD>"
 	http -v GET localhost:30080/sign-in body="GET /sign-in"

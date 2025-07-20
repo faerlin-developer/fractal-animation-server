@@ -1,5 +1,6 @@
 import databases
 import redis.asyncio as redis
+from databases import Database
 
 DATABASE_URL = "postgresql://myuser:mypassword@postgres-service:5432/mydb"
 
@@ -9,3 +10,7 @@ database = databases.Database(
     DATABASE_URL,
     force_rollback=False
 )
+
+
+def get_database() -> Database:
+    return database

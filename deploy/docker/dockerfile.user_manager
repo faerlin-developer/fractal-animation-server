@@ -2,10 +2,12 @@ FROM python:3.13-slim
 
 WORKDIR /
 RUN mkdir -p app/user_manager
+RUN mkdir -p app/common
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app/user_manager /app/user_manager
+COPY app/common /app/common
 
-CMD ["uvicorn", "app.user_manager.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.user_manager.main:server", "--host", "0.0.0.0", "--port", "8000"]

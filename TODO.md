@@ -1,6 +1,8 @@
 # TODO
 
-|   | Description                                       | Done |
-|---|---------------------------------------------------|------|
-| 1 | Working skeleton of task_manager and image_server | ✅    |
-| 2 | Integrate Traefik (use Docker compose)            |      |  
+Saturday, July 19
+
+- Move any common code into common folder.
+- User Manager
+    - Implement sign-up route
+    - Implement sign-in route

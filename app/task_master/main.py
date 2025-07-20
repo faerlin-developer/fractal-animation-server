@@ -25,14 +25,14 @@ async def lifespan(app: FastAPI):
     await database.connect()
 
     # Insert one user
-    query = users.insert().values(name="Zoey")
+    query = users.insert().values(username="Zoey", password_hash="<PASSWORD>")
     inserted_id = await database.execute(query)
     logger.info(f"Inserted user id: {inserted_id}")
 
     # Retrieve user by id
     query = users.select().where(users.c.id == inserted_id)
     user = await database.fetch_one(query)
-    logger.info(f"Retrieved user: {user['name']}")
+    logger.info(f"Retrieved user: {user['username']}")
 
     yield
 

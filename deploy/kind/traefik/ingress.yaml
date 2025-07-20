@@ -55,3 +55,10 @@ spec:
                 name: user-manager-service
                 port:
                   number: 8000
+          - path: /delete-user
+            pathType: Prefix
+            backend:
+              service:
+                name: user-manager-service
+                port:
+                  number: 8000
