@@ -5,3 +5,12 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS tasks (
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL,
+    z_Re DOUBLE PRECISION NOT NULL,
+    z_Im DOUBLE PRECISION NOT NULL,
+    state TEXT NOT NULL CHECK (state IN ('READY', 'RUNNING', 'DONE')),
+    created_at TIMESTAMP DEFAULT NOW()
+);

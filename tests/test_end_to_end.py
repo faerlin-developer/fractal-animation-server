@@ -46,7 +46,21 @@ def delete_user(token: str):
     with httpx.Client() as client:
         response = client.delete(f"{HOST_PORT}/delete-user", headers=headers)
 
-    assert response.status_code == 204
+    return response
+
+
+def add_task(task: dict, token: str):
+    """Send POST /add request"""
+
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+
+    response = None
+    with httpx.Client() as client:
+        response = client.post(f"{HOST_PORT}/add", json=task, headers=headers)
+
+    return response
 
 
 def test_end_to_end():
@@ -68,9 +82,20 @@ def test_end_to_end():
     assert response.status_code == 201
 
     data = response.json()
-    claims = verify_jwt(token=data["access_token"])
+    token = data["access_token"]
+    claims = verify_jwt(token=token)
     assert "sub" in claims and "exp" in claims
     assert claims["sub"] == username
 
+    # POST /add
+    task = {"z_re": -0.80, "z_im": -0.18}
+    response = add_task(task, token)
+    assert response.status_code == 201
+
+    data = response.json()
+    assert "id" in data
+    assert task.items() <= data.items()
+
     # DELETE /delete-user
-    delete_user(data["access_token"])
+    response = delete_user(token)
+    assert response.status_code == 204

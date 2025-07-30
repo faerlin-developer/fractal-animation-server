@@ -40,7 +40,7 @@ docker-run-minio:
   		-e MINIO_ROOT_PASSWORD=minioadmin \
   		-p 9000:9000 \
   		-p 9001:9001 \
-  		-v "$(PWD)/data":/data \
+  		-v "$(PWD)/tmp":/data \
   		minio/minio server /data --console-address ":9001"
 	docker run --rm \
   		--network container:my_minio \

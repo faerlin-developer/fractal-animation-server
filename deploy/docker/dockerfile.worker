@@ -4,8 +4,12 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 RUN mkdir -p app/worker
+RUN mkdir -p app/common
 COPY app/worker /app/worker
+COPY app/common /app/common
 
-WORKDIR /app/worker
+WORKDIR /
 
-CMD ["python", "main.py"]
+ENV PYTHONPATH=.
+
+CMD ["python", "app/worker/main.py"]

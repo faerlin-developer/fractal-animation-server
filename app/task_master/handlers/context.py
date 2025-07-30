@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.user_manager.db.clients import connect_database, disconnect_database
+from app.task_master.db.clients import connect_database, disconnect_database
 
 
 @asynccontextmanager

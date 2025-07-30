@@ -2,22 +2,24 @@ import time
 
 import structlog
 from fastapi import APIRouter, HTTPException
-from fastapi import Request, Depends, status
-from jwt import ExpiredSignatureError, PyJWTError, InvalidTokenError
+from fastapi import Request, Depends
 
+from app.common.security.auth import authenticate
 from app.common.security.crypt import hash_password
-from app.common.security.token import create_jwt, verify_jwt
-from app.user_manager.db.instances import get_user_database
-from app.user_manager.db.user import UserDatabase
+from app.common.security.token import create_jwt
+from app.user_manager.db.clients import get_user_db
+from app.user_manager.db.user import UserDatabaseClient
 from app.user_manager.payloads.user import UserRequestPayload, SignUpResponsePayload, SignInResponsePayload
 
 router = APIRouter()
 
 log = structlog.get_logger()
 
+from app.common.db.user import verify_user
+
 
 @router.post("/sign-up", response_model=SignUpResponsePayload, status_code=201)
-async def sign_up(request: Request, payload: UserRequestPayload, db: UserDatabase = Depends(get_user_database)):
+async def sign_up(request: Request, payload: UserRequestPayload, db: UserDatabaseClient = Depends(get_user_db)):
     """Creates a new user by storing credentials in database."""
 
     user = await db.get_user(payload.username)
@@ -32,31 +34,9 @@ async def sign_up(request: Request, payload: UserRequestPayload, db: UserDatabas
     return {"id": new_id, "username": payload.username}
 
 
-async def authenticate(request: Request) -> dict:
-    """Dependency to authenticate a user by verifying the request's JWT."""
-
-    auth_header = request.headers.get("Authorization")
-    scheme, _, token = auth_header.partition(" ")
-    if scheme.lower() != "bearer":
-        raise HTTPException(status_code=401, detail="Invalid auth scheme")
-
-    try:
-        return verify_jwt(token)
-    except ExpiredSignatureError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token has expired",
-        )
-    except (PyJWTError, InvalidTokenError):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-        )
-
-
-@router.delete("/delete-user", status_code=204, dependencies=[Depends(authenticate)])
+@router.delete("/delete-user", status_code=204)
 async def delete_user(request: Request,
-                      db: UserDatabase = Depends(get_user_database),
+                      db: UserDatabaseClient = Depends(get_user_db),
                       claims: dict = Depends(authenticate)):
     """Delete a user from the database."""
 
@@ -68,16 +48,11 @@ async def delete_user(request: Request,
 
 
 @router.post("/sign-in", response_model=SignInResponsePayload, status_code=201)
-async def sing_in(request: Request, payload: UserRequestPayload, db: UserDatabase = Depends(get_user_database)):
+async def sing_in(request: Request, payload: UserRequestPayload, db: UserDatabaseClient = Depends(get_user_db)):
     """Authenticate a user by responding with a JWT."""
 
-    user = await db.get_user(payload.username)
-
-    if user is None:
-        log.info(f"username does not exists", username=payload.username, request_id=request.state.request_id)
-        raise HTTPException(status_code=409, detail="username does not exists")
-
+    await verify_user(payload.username, db)
     expires_at = int(time.time()) + 3600
-    token = create_jwt(user.username, expires_at)
+    token = create_jwt(payload.username, expires_at)
 
     return {"access_token": token, "token_type": "Bearer"}
