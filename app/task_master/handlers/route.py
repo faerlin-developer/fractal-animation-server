@@ -1,59 +1,68 @@
 import structlog
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, HTTPException
 
-from app.common.db.task import FractalTask
-from app.common.db.user import BaseUserDatabaseClient
-from app.common.db.user import verify_user
-from app.common.security.auth import authenticate
-from app.common.tables.task import State
-from app.task_master.db.clients import get_task_queue, get_user_db, get_task_db
-from app.task_master.db.queue import TaskQueueClient
-from app.task_master.db.task import TaskDatabaseClient
-from app.task_master.payloads.task import AddTaskRequestPayload, AddTaskResponsePayload
-from app.task_master.payloads.task import Task, TaskIn
+from common.db.redis.client import FractalTask
+from common.db.redis.client import TaskQueue
+from common.db.sql.client import UserDatabase, TaskDatabase
+from common.db.sql.tables.task import State
+from common.security.auth import authenticate
+from task_master.db.clients import get_task_queue, get_user_db, get_task_db, get_object_storage
+from task_master.payloads.task import TaskIn, Task
 
 router = APIRouter()
 
 log = structlog.get_logger()
 
 
-@router.post("/add", response_model=AddTaskResponsePayload, status_code=201)
+@router.post("/add", response_model=Task, status_code=201)
 async def add(request: Request,
-			  payload: AddTaskRequestPayload,
-			  user_db: BaseUserDatabaseClient = Depends(get_user_db),
-			  task_db: TaskDatabaseClient = Depends(get_task_db),
-			  queue: TaskQueueClient = Depends(get_task_queue),
+			  payload: TaskIn,
+			  user_db: UserDatabase = Depends(get_user_db),
+			  task_db: TaskDatabase = Depends(get_task_db),
+			  task_queue: TaskQueue = Depends(get_task_queue),
 			  claims: dict = Depends(authenticate)):
 	""""""
 
 	username = claims["sub"]
-	await verify_user(username, user_db)
+	verified = await user_db.verify_user(username)
+	if not verified:
+		raise HTTPException(status_code=409, detail="username does not exists")
 
 	task_id = await task_db.add(username, payload.z_re, payload.z_im, State.READY)
 	task = FractalTask(id=task_id, z_re=payload.z_re, z_im=payload.z_im)
-	await queue.push(task)
+	task_queue.push(task)
 
 	log.info("added task", task_id=task_id, request_id=request.state.request_id)
 
-	return {"id": task_id, "z_re": payload.z_re, "z_im": payload.z_im}
+	return Task(id=task_id, z_re=payload.z_re, z_im=payload.z_im, state=State.READY, url="")
 
 
-@router.post("/delete", response_model=Task, status_code=201)
-async def delete(task_in: TaskIn):
-	data = task_in.model_dump()
-	task = {**data, "id": 1}
-	return task
+@router.post("/delete", status_code=201)
+async def delete():
+	return None
 
 
-@router.get("/tasks", response_model=Task, status_code=201)
-async def tasks(task_in: TaskIn):
-	data = task_in.model_dump()
-	task = {**data, "id": 1}
-	return task
+@router.get("/tasks", status_code=201)
+async def tasks():
+	return None
 
 
-@router.get("/download", response_model=Task, status_code=201)
-async def download(task_in: TaskIn, claims: dict = Depends(authenticate)):
-	data = task_in.model_dump()
-	task = {**data, "id": 1}
-	return task
+@router.get("/download/{task_id}", response_model=Task, status_code=201)
+async def download(task_id: int,
+				   user_db: UserDatabase = Depends(get_user_db),
+				   task_db: TaskDatabase = Depends(get_task_db),
+				   claims: dict = Depends(authenticate),
+				   object_storage=Depends(get_object_storage)):
+	""""""
+
+	username = claims["sub"]
+	verified = await user_db.verify_user(username)
+	if not verified:
+		raise HTTPException(status_code=409, detail="username does not exists")
+
+	task = await task_db.get_task(task_id)
+	if task is None:
+		raise HTTPException(status_code=409, detail="task does not exists")
+
+	url = object_storage.get(bucket_name="images", object_name=f"{task_id}.png")
+	return Task(id=task.id, z_re=task.z_re, z_im=task.z_im, state=task.state, url=url)

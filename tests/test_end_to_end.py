@@ -1,3 +1,5 @@
+import time
+
 import httpx
 
 from app.common.security.token import verify_jwt
@@ -6,96 +8,117 @@ HOST_PORT = "http://localhost:30080"
 
 
 def signup_user(username: str, password: str):
-    """Send POST /sign-up request"""
+	"""Send POST /sign-up request"""
 
-    payload = {
-        "username": username,
-        "password": password,
-    }
+	payload = {
+		"username": username,
+		"password": password,
+	}
 
-    response = None
-    with httpx.Client() as client:
-        response = client.post(f"{HOST_PORT}/sign-up", json=payload)
+	response = None
+	with httpx.Client() as client:
+		response = client.post(f"{HOST_PORT}/sign-up", json=payload)
 
-    return response
+	return response
 
 
 def signin_user(username: str, password: str):
-    """Send POST /sign-in request"""
+	"""Send POST /sign-in request"""
 
-    payload = {
-        "username": username,
-        "password": password,
-    }
+	payload = {
+		"username": username,
+		"password": password,
+	}
 
-    response = None
-    with httpx.Client() as client:
-        response = client.post(f"{HOST_PORT}/sign-in", json=payload)
+	response = None
+	with httpx.Client() as client:
+		response = client.post(f"{HOST_PORT}/sign-in", json=payload)
 
-    return response
+	return response
 
 
 def delete_user(token: str):
-    """Send DELETE /delete-user request"""
+	"""Send DELETE /delete-user request"""
 
-    headers = {
-        "Authorization": f"Bearer {token}"
-    }
+	headers = {
+		"Authorization": f"Bearer {token}"
+	}
 
-    response = None
-    with httpx.Client() as client:
-        response = client.delete(f"{HOST_PORT}/delete-user", headers=headers)
+	response = None
+	with httpx.Client() as client:
+		response = client.delete(f"{HOST_PORT}/delete-user", headers=headers)
 
-    return response
+	return response
 
 
 def add_task(task: dict, token: str):
-    """Send POST /add request"""
+	"""Send POST /add request"""
 
-    headers = {
-        "Authorization": f"Bearer {token}"
-    }
+	headers = {
+		"Authorization": f"Bearer {token}"
+	}
 
-    response = None
-    with httpx.Client() as client:
-        response = client.post(f"{HOST_PORT}/add", json=task, headers=headers)
+	response = None
+	with httpx.Client() as client:
+		response = client.post(f"{HOST_PORT}/add", json=task, headers=headers)
 
-    return response
+	return response
+
+
+def download_task(task_id: str, token: str):
+	"""Send POST /download/{task_id} request"""
+
+	headers = {
+		"Authorization": f"Bearer {token}"
+	}
+
+	response = None
+	with httpx.Client() as client:
+		response = client.get(f"{HOST_PORT}/download/{task_id}", headers=headers)
+
+	return response
 
 
 def test_end_to_end():
-    """End-to-end test"""
+	"""End-to-end test"""
 
-    username = "faerlin"
-    password = "<PASSWORD>"
+	username = "faerlin"
+	password = "<PASSWORD>"
 
-    # POST /sign-up
-    response = signup_user(username, password)
-    assert response.status_code == 201
+	# POST /sign-up
+	response = signup_user(username, password)
+	assert response.status_code == 201
 
-    data = response.json()
-    assert "id" in data
-    assert data["username"] == username
+	data = response.json()
+	assert "id" in data and "username" in data
+	assert data["username"] == username
 
-    # POST /sign-in
-    response = signin_user(username, password)
-    assert response.status_code == 201
+	# POST /sign-in
+	response = signin_user(username, password)
+	assert response.status_code == 201
 
-    data = response.json()
-    token = data["access_token"]
-    claims = verify_jwt(token=token)
-    assert "sub" in claims and "exp" in claims
-    assert claims["sub"] == username
+	data = response.json()
+	token = data["access_token"]
+	claims = verify_jwt(token=token)
+	assert "sub" in claims and "exp" in claims
+	assert claims["sub"] == username
 
-    # POST /add
-    task = {"z_re": -0.80, "z_im": -0.18}
-    response = add_task(task, token)
-    assert response.status_code == 201
+	# POST /add
+	task = {"z_re": -0.80, "z_im": -0.18}
+	response = add_task(task, token)
+	assert response.status_code == 201
 
-    data = response.json()
-    assert "id" in data
-    assert task.items() <= data.items()
+	data = response.json()
+	assert "id" in data
+	assert task.items() <= data.items()
+	task_id = data["id"]
 
-    # DELETE /delete-user
-    response = delete_user(token)
-    assert response.status_code == 204
+	time.sleep(5)
+
+	# POST /download/{task_id}
+	response = download_task(task_id, token)
+	print(response.json())
+
+	# DELETE /delete-user
+	response = delete_user(token)
+	assert response.status_code == 204

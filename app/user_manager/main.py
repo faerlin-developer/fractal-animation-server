@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 
-import app.common.logger.slog  # noqa: F401
-from app.user_manager.handlers.context import lifespan
-from app.user_manager.handlers.exception import general_exception_handler
-from app.user_manager.handlers.middleware import PreProcessRequest
-from app.user_manager.handlers.route import router
+import common.logger.slog  # noqa: F401
+from user_manager.handlers.context import lifespan
+from user_manager.handlers.exception import general_exception_handler
+from user_manager.handlers.middleware import PreProcessRequest
+from user_manager.handlers.route import router
 
 server = FastAPI(lifespan=lifespan)
 

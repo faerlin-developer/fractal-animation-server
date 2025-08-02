@@ -1,17 +1,17 @@
-from app.user_manager.db.user import UserDatabaseClient
+from common.db.sql.client import UserDatabase
 
 DATABASE_URL = "postgresql://myuser:mypassword@postgres-service:5432/mydb"
 
-user_db = UserDatabaseClient(DATABASE_URL, force_rollback=False)
+user_db = UserDatabase(DATABASE_URL, force_rollback=False)
 
 
-def get_user_db() -> UserDatabaseClient:
-    return user_db
+def get_user_db() -> UserDatabase:
+	return user_db
 
 
 async def connect_database():
-    await user_db.connect()
+	await user_db.connect()
 
 
 async def disconnect_database():
-    await user_db.disconnect()
+	await user_db.disconnect()

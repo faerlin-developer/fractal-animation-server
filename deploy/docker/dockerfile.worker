@@ -8,8 +8,8 @@ RUN mkdir -p app/common
 COPY app/worker /app/worker
 COPY app/common /app/common
 
-WORKDIR /
+WORKDIR /app
 
 ENV PYTHONPATH=.
 
-CMD ["python", "app/worker/main.py"]
+CMD ["python", "worker/main.py"]

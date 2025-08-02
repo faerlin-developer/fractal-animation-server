@@ -1,3 +1,3 @@
 
 pytest:
-	PYTHONPATH=. pytest
+	PYTHONPATH=. pytest -v -s
