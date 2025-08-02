@@ -1,4 +1,4 @@
-# fractals-as-a-service
+# Fractal Image Server
 
 ![](faas.png)
 
