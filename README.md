@@ -2,6 +2,7 @@
 
 ![](faas.png)
 
+<!--
 ## Notes
 
 - RBAC grants access to pods
@@ -11,3 +12,5 @@
   Ingress rules. Example: traefik. It reads Kubernetes Ingress resources. Then it dynamically configures itself to
   route traffic to the appropriate services.
 - The traefik's NodePort exposes Traefik on a fixed port outside of the cluster.
+
+-->
