@@ -1,4 +1,3 @@
-import json
 import logging
 import signal
 import sys
@@ -6,10 +5,10 @@ import time
 
 from minio import S3Error
 
-from common.db.redis.client import FractalTask
-from db.clients import object_storage
-from db.clients import task_db, task_queue
-from julia import Julia
+from worker.db.clients import object_storage
+from worker.db.clients import task_queue
+from worker.julia.animation import JuliaAnimation
+from worker.julia.image import JuliaImage
 
 logging.basicConfig(
 	level=logging.INFO,
@@ -28,10 +27,7 @@ def handle_signal(signum, frame):
 	global stop
 	logger.info("Received SIGTERM or SIGINT, cleaning up...")
 	stop = True
-	task_db.disconnect()
 
-
-# Do your cleanup here
 
 signal.signal(signal.SIGTERM, handle_signal)
 signal.signal(signal.SIGINT, handle_signal)
@@ -42,7 +38,7 @@ QUEUE_NAME = "task_queue"
 def generate_julia_set(z_re, z_im, width=800, height=600, max_iterations=500, scale=1.2, filename="julia.png"):
 	"""Generate julia set"""
 
-	julia = Julia(
+	julia = JuliaImage(
 		width=width,
 		height=height,
 		max_iterations=max_iterations,
@@ -50,9 +46,10 @@ def generate_julia_set(z_re, z_im, width=800, height=600, max_iterations=500, sc
 		scale=scale
 	)
 
-	julia.generate(filename)
+	julia.generate()
+	julia.save(filename)
 
-	logger.info("generated sample")
+	logger.info(f"generated {filename}")
 
 
 def main():
@@ -60,30 +57,27 @@ def main():
 
 	while not stop:
 		try:
-			entry = task_queue.pop()
-			if entry:
-				_, task_bytes = entry
 
-				task_dict = json.loads(task_bytes)
-				task = FractalTask(**task_dict)
+			# Get task from redis queue (returns None if timeout)
+			task = task_queue.pop(timeout=5)
+			if task is None:
+				continue
 
-				logger.info(f"Processing task: {task}")
+			logger.info(f"Processing task: {task}")
 
-				generate_julia_set(task.z_re, task.z_im, filename="julia.png")
+			generate_julia_set(task.z_re, task.z_im, filename="julia.png")
 
-				object_name = f"{task.id}.png"
-				file_path = f"julia.png"
+			object_name = f"{task.id}.png"
+			file_path = f"julia.png"
 
-				try:
-					object_storage.put(bucket_name, object_name, file_path, "image/png")
-					logger.info(f"Uploaded '{file_path}' as '{object_name}' in bucket '{bucket_name}'")
-				except S3Error as e:
-					logger.info(f"Upload failed: {e}")
+			try:
+				object_storage.put(bucket_name, object_name, file_path, "image/png")
+				logger.info(f"Uploaded '{file_path}' as '{object_name}' in bucket '{bucket_name}'")
+			except S3Error as e:
+				logger.info(f"Upload failed: {e}")
 
-				# TODO: Update state in database
-
-				url = object_storage.get(bucket_name, object_name)
-				logger.info(f'Access your image: {url}')
+			url = object_storage.get(bucket_name, object_name)
+			logger.info(f'Access your image: {url}')
 
 		except Exception as e:
 			logger.error(e)
@@ -91,4 +85,7 @@ def main():
 
 
 if __name__ == "__main__":
+	julia = JuliaAnimation(width=800, height=600, max_iterations=500, c=(-0.80, -0.18), scale=1.2)
+	julia.generate()
+
 	main()

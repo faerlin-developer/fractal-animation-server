@@ -14,3 +14,8 @@ pydantic==2.11.7
 pytest==8.4.1
 pyjwt==2.10.1
 starlette==0.46.2
+imageio==2.37.0
+numpy==2.3.1
+imageio-ffmpeg==0.6.0
+plotly==6.2.0
+dash==2.14.2

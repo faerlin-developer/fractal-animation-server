@@ -1,8 +1,9 @@
 from PIL import Image
 
 
-class Julia:
-	def __init__(self, width, height, max_iterations, c, scale=1.5):
+class JuliaImage:
+
+	def __init__(self, width, height, max_iterations, c, scale=1.2):
 		self.width = width
 		self.height = height
 		self.max_iterations = max_iterations
@@ -28,10 +29,12 @@ class Julia:
 				return i
 		return self.max_iterations
 
-	def generate(self, filename="julia.png"):
+	def generate(self):
 		self.reset()
 		self.compute_iterations()
 		self.render()
+
+	def save(self, filename: str):
 		self.image.save(filename)
 
 	def reset(self):
@@ -51,14 +54,16 @@ class Julia:
 					self.total_iterations += 1
 
 	def render(self):
+		""""""
+
 		for y in range(self.height):
 			for x in range(self.width):
+
 				i = self.iterations[y * self.width + x]
 
 				if i == self.max_iterations:
 					color = (0, 0, 0)
 				else:
-					# Use histogram-based hue without smoothing
 					hue = sum(self.histogram[:i + 1]) / self.total_iterations
 					val = int(pow(255, hue))
 					val = min(val, 255)
