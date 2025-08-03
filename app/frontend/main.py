@@ -4,7 +4,7 @@ from dash import Dash, dcc, html, Input, Output
 
 
 # Mandelbrot generation function
-def mandelbrot(xmin, xmax, ymin, ymax, width=500, height=500, max_iter=100):
+def mandelbrot(xmin, xmax, ymin, ymax, width=800, height=600, max_iter=100):
 	x = np.linspace(xmin, xmax, width)
 	y = np.linspace(ymin, ymax, height)
 	X, Y = np.meshgrid(x, y)
@@ -19,28 +19,25 @@ def mandelbrot(xmin, xmax, ymin, ymax, width=500, height=500, max_iter=100):
 		div_time[div_now] = i
 		Z[diverge] = 2
 
+	print(C.shape)
+	print(div_time[0][0])
+
 	return div_time
 
 
 # Generate Mandelbrot data
-mandelbrot_data = mandelbrot(-2.0, 1.0, -1.5, 1.5)
+mandelbrot_data = mandelbrot(-2.5, 1.0, -1.5, 1.5)
 
 # Create Plotly figure
 fig = px.imshow(
 	mandelbrot_data,
 	color_continuous_scale="turbo",
-	origin="lower",
-	title="Mandelbrot Set",
-	labels={"color": "Iterations"}
 )
+
 # Fix axes labels for coordinate mapping
 fig.update_layout(
 	dragmode=False,
-
 	xaxis=dict(
-		scaleanchor="y",
-		scaleratio=1,
-		range=[0, mandelbrot_data.shape[1] - 1],
 		showticklabels=False,
 		fixedrange=True
 	),
@@ -48,14 +45,28 @@ fig.update_layout(
 		autorange="reversed",
 		showticklabels=False,
 		fixedrange=True
-	)
+	),
+	width=800,
+	height=600,
 )
+
+fig.update_traces(
+	hovertemplate="<extra></extra>",
+)
+
+fig.update_layout(coloraxis_showscale=False)
 
 app = Dash(__name__)
 
 app.layout = html.Div([
-	html.H1("Mandelbrot Set Visualization"),
-	dcc.Graph(id="mandelbrot-graph", figure=fig),
+	html.H1("Fractal MP4 Generator"),
+	dcc.Graph(
+		id="mandelbrot-graph",
+		figure=fig,
+		config={
+			'displayModeBar': False  # disables the entire mode bar with icons
+		}
+	),
 	html.Div(id="click-output", style={"marginTop": "20px", "fontSize": "20px"}),
 ])
 
@@ -73,11 +84,11 @@ def display_click_data(clickData):
 	px_y = point["y"]
 	# Map pixel coordinates back to complex plane coordinates
 	# Original plane ranges:
-	xmin, xmax = -2.0, 1.0
+	xmin, xmax = -2.5, 1.0
 	ymin, ymax = -1.5, 1.5
 	width, height = mandelbrot_data.shape[1], mandelbrot_data.shape[0]
 	x_coord = xmin + (xmax - xmin) * (px_x / width)
-	y_coord = ymin + (ymax - ymin) * (px_y / height)
+	y_coord = -1 * (ymin + (ymax - ymin) * (px_y / height))
 	return f"Clicked at pixel coords: ({px_x:.1f}, {px_y:.1f}) → Mandelbrot coords: ({x_coord:.5f}, {y_coord:.5f})"
 
 
