@@ -32,7 +32,7 @@ spec:
                 name: task-master-service
                 port:
                   number: 8000
-          - path: /download
+          - path: /task
             pathType: Prefix
             backend:
               service:

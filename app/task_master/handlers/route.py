@@ -39,15 +39,17 @@ async def add(request: Request,
 
 @router.post("/delete", status_code=201)
 async def delete():
+	# TODO: implement
 	return None
 
 
 @router.get("/tasks", status_code=201)
 async def tasks():
+	# TODO: implement
 	return None
 
 
-@router.get("/download/{task_id}", response_model=Task, status_code=201)
+@router.get("/task/{task_id}", response_model=Task, status_code=201)
 async def download(task_id: int,
 				   user_db: UserDatabase = Depends(get_user_db),
 				   task_db: TaskDatabase = Depends(get_task_db),
@@ -64,5 +66,14 @@ async def download(task_id: int,
 	if task is None:
 		raise HTTPException(status_code=409, detail="task does not exists")
 
-	url = object_storage.get(bucket_name="images", object_name=f"{task_id}.png")
+	url = object_storage.get(bucket_name="images", object_name=f"{task_id}.mp4")
 	return Task(id=task.id, z_re=task.z_re, z_im=task.z_im, state=task.state, url=url)
+
+
+@router.put("/update/{task_id}", status_code=200)
+async def update(request: Request, task_id: int, task_db: TaskDatabase = Depends(get_task_db)):
+	"""Only available within the cluster."""
+
+	payload = await request.json()
+	await task_db.update_state(task_id, State(payload["state"]))
+	return None

@@ -25,8 +25,13 @@ class TaskDatabase(BaseDatabase):
 		query = Tasks.insert().values(username=username, z_re=z_re, z_im=z_im, state=state)
 		return await self.database.execute(query)
 
-	async def update_state(self, task_id, state: str):
-		pass
+	async def update_state(self, task_id, state: State):
+		query = (
+			Tasks.update()
+			.where(Tasks.c.id == task_id)
+			.values(state=state.value)
+		)
+		await self.database.execute(query)
 
 	async def get_task(self, task_id):
 		query = Tasks.select().where(Tasks.c.id == task_id)

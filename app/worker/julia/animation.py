@@ -4,7 +4,6 @@ import math
 import imageio.v2 as imageio
 import numpy as np
 
-from worker.db.clients import object_storage
 from worker.julia.image import JuliaImage
 
 logger = logging.getLogger(__name__)
@@ -30,7 +29,7 @@ class JuliaAnimation:
 		self.c = complex(*c)
 		self.scale = scale
 
-	def generate(self):
+	def generate_and_save(self, filename="julia.mp4"):
 		""""""
 
 		images = []
@@ -51,9 +50,8 @@ class JuliaAnimation:
 			self.c = perturb_c(self.c)
 
 		logging.info(f"creating mp4...")
-
 		# noinspection PyUnresolvedReferences
 		frames = [np.asarray(img) for img in images]
-		imageio.mimsave("output.mp4", frames, fps=24)
+		imageio.mimsave(filename, frames, fps=24)
 
-		object_storage.put("images", "output.mp4", "output.mp4", "video/mp4")
+		logging.info(f"finish generating animation")

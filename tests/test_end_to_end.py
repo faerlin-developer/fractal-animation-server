@@ -2,6 +2,7 @@ import time
 
 import httpx
 
+from app.common.db.sql.tables.task import State
 from app.common.security.token import verify_jwt
 
 HOST_PORT = "http://localhost:30080"
@@ -65,7 +66,7 @@ def add_task(task: dict, token: str):
 	return response
 
 
-def download_task(task_id: str, token: str):
+def get_task(task_id: str, token: str):
 	"""Send POST /download/{task_id} request"""
 
 	headers = {
@@ -74,7 +75,7 @@ def download_task(task_id: str, token: str):
 
 	response = None
 	with httpx.Client() as client:
-		response = client.get(f"{HOST_PORT}/download/{task_id}", headers=headers)
+		response = client.get(f"{HOST_PORT}/task/{task_id}", headers=headers)
 
 	return response
 
@@ -113,11 +114,24 @@ def test_end_to_end():
 	assert task.items() <= data.items()
 	task_id = data["id"]
 
-	time.sleep(5)
+	# GET /task/{task_id}
+	# Poll until task is done
+	i = 0
+	while True:
+		response = get_task(task_id, token)
+		data = response.json()
+		assert data["id"] == task_id
 
-	# POST /download/{task_id}
-	response = download_task(task_id, token)
-	print(response.json())
+		if data["state"] == State.DONE.value:
+			print(data)
+			break
+		elif data["state"] == State.FAILED.value:
+			print("task failed")
+			break
+		else:
+			print(f"i={i} sleeping 2 second")
+			i += 1
+			time.sleep(2)
 
 	# DELETE /delete-user
 	response = delete_user(token)
