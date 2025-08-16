@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: faas/worker:0.0.1
+          image: fas/worker:0.0.1
           ports:
             - containerPort: 8000
           volumeMounts:

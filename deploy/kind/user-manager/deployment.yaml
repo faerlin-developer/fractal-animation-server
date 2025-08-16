@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: user-manager
-          image: faas/user-manager:0.0.1
+          image: fas/user-manager:0.0.1
           ports:
             - containerPort: 8000
           volumeMounts:

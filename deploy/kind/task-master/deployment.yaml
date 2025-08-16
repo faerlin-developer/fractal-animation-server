@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: task-master
-          image: faas/task-master:0.0.1
+          image: fas/task-master:0.0.1
           ports:
             - containerPort: 8000
           volumeMounts:

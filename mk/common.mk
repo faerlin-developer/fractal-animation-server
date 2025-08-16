@@ -1,11 +1,11 @@
 
 # Cluster
 KIND_IMAGE          := kindest/node:v1.30.13
-KIND_CLUSTER        := faas-cluster
+KIND_CLUSTER        := fas-cluster
 
 # Applications
 VERSION             := 0.0.1
-BASE_IMAGE_NAME     := faas
+BASE_IMAGE_NAME     := fas
 TASK_MASTER_APP     := task-master
 USER_MANAGER_APP    := user-manager
 WORKER_APP 		    := worker

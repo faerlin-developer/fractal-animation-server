@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: faas/postgres:0.0.1
+          image: fas/postgres:0.0.1
           ports:
             - containerPort: 5432
           env:

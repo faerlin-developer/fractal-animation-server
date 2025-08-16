@@ -1,6 +1,6 @@
-# Fractal Image Server
+# Fractal Animation Server
 
-![](faas.png)
+![](design.png)
 
 <!--
 ## Notes
