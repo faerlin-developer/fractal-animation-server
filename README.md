@@ -2,7 +2,8 @@
 
 ![](design.png)
 
-https://github.com/faerlin-developer/fractal-animation-server/raw/refs/heads/main/sample.mp4
+
+<video src="https://github.com/faerlin-developer/fractal-animation-server/raw/refs/heads/main/sample.mp4" width="352" height="720"></video>
 
 <!--
 ## Notes
