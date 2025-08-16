@@ -1,93 +1,69 @@
-import logging
 import signal
-import sys
 
-import httpx
+import structlog
 
+import common.logger.slog  # noqa: F401
 from common.db.sql.tables.task import State
+from worker.config import cfg
 from worker.db.clients import object_storage
 from worker.db.clients import task_queue
+from worker.http.clients import task_master_client
 from worker.julia.animation import JuliaAnimation
-from worker.julia.image import JuliaImage
 
-logging.basicConfig(
-	level=logging.INFO,
-	format="%(asctime)s [%(levelname)s] %(message)s",
-	handlers=[logging.StreamHandler(sys.stdout)]
-)
-
-logger = logging.getLogger(__name__)
-
+log = structlog.get_logger()
 stop = False
-
-bucket_name = "images"
 
 
 def handle_signal(signum, frame):
 	global stop
-	logger.info("Received SIGTERM or SIGINT, cleaning up...")
+	log.info("handle signal", signum=signum, frame=frame)
 	stop = True
 
 
 signal.signal(signal.SIGTERM, handle_signal)
 signal.signal(signal.SIGINT, handle_signal)
 
-QUEUE_NAME = "task_queue"
 
-
-def generate_julia_set(z_re, z_im, width=800, height=600, max_iterations=500, scale=1.2, filename="julia.png"):
-	"""Generate julia set"""
-
-	julia = JuliaImage(
-		width=width,
-		height=height,
-		max_iterations=max_iterations,
-		c=(z_re, z_im),
-		scale=scale
-	)
-
-	julia.generate()
-	julia.save(filename)
-
-	logger.info(f"generated {filename}")
-
-
-def generate_julia_animation(z_re, z_im, width=800, height=600, max_iterations=500, scale=1.2, filename="julia.mp4"):
+def generate_julia_animation(z_re, z_im, filename, width, height, max_iterations, scale):
 	julia = JuliaAnimation(width=width, height=height, max_iterations=max_iterations, c=(z_re, z_im), scale=scale)
 	julia.generate_and_save(filename)
+	log.info("generated julia set animation", filename=filename)
 
 
 def main():
-	logger.info("Starting worker...")
+	log.info("started worker")
 
 	while not stop:
 
 		# Get task from redis queue (returns None if timeout)
-		task = task_queue.pop(timeout=5)
+		task = task_queue.pop(timeout=1)
 		if task is None:
 			continue
 
-		logger.info(f"Processing task: {task}")
+		log.info("Started to process task", task=task)
 
 		try:
-			# generate_julia_set(task.z_re, task.z_im, filename="julia.png")
-			generate_julia_animation(task.z_re, task.z_im, filename="julia.mp4")
-			file_path = f"julia.mp4"
-			object_name = f"{task.id}.mp4"
-			# object_storage.put(bucket_name, object_name, file_path, "image/png")
-			object_storage.put(bucket_name, object_name, file_path, "video/mp4")
-			logger.info(f"Uploaded '{file_path}' as '{object_name}' in bucket '{bucket_name}'")
-		except Exception as e:
-			logger.info(f"Upload failed: {e}")
-			payload = {"state": State.FAILED.value}
-			with httpx.Client() as client:
-				client.put(f"http://task-master-service:8000/update/{task.id}", json=payload)
-			continue
+			# Generate Julia animation locally
+			local_file = f"julia.mp4"
+			generate_julia_animation(z_re=task.z_re,
+									 z_im=task.z_im,
+									 filename=local_file,
+									 width=cfg.default_width,
+									 height=cfg.default_height,
+									 max_iterations=cfg.default_max_iterations,
+									 scale=cfg.default_scale)
 
-		# Update state of task
-		payload = {"state": State.DONE.value}
-		with httpx.Client() as client:
-			client.put(f"http://task-master-service:8000/update/{task.id}", json=payload)
+			# Store object in storage
+			object_name = f"{task.id}.mp4"
+			object_storage.put(cfg.minio_bucket_name, object_name, local_file, "video/mp4")
+			log.info("upload file to object storage", object_name=object_name, bucket_name=cfg.minio_bucket_name)
+
+			# Update state of task to DONE
+			task_master_client.update_state(task.id, State.DONE.value)
+
+		except Exception as exception:
+			log.error("failed to upload file to object storage", exception=exception, task=task)
+			task_master_client.update_state(task.id, State.FAILED.value)
 
 
 if __name__ == "__main__":

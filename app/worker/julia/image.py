@@ -37,6 +37,10 @@ class JuliaImage:
 	def save(self, filename: str):
 		self.image.save(filename)
 
+	def generate_and_save(self, filename: str):
+		self.generate()
+		self.save(filename)
+
 	def reset(self):
 		self.iterations = [0] * (self.width * self.height)
 		self.histogram = [0] * self.max_iterations

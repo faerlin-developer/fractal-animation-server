@@ -24,3 +24,11 @@ spec:
           image: faas/task-master:0.0.1
           ports:
             - containerPort: 8000
+          volumeMounts:
+            - name: volume-secret-credentials
+              mountPath: "/etc/secret"
+              readOnly: true
+      volumes:
+        - name: volume-secret-credentials
+          secret:
+            secretName: secret-credentials

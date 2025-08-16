@@ -21,7 +21,7 @@ async def add(request: Request,
 			  task_db: TaskDatabase = Depends(get_task_db),
 			  task_queue: TaskQueue = Depends(get_task_queue),
 			  claims: dict = Depends(authenticate)):
-	""""""
+	"""Create a new fractal task for a verified user."""
 
 	username = claims["sub"]
 	verified = await user_db.verify_user(username)
@@ -31,7 +31,6 @@ async def add(request: Request,
 	task_id = await task_db.add(username, payload.z_re, payload.z_im, State.READY)
 	task = FractalTask(id=task_id, z_re=payload.z_re, z_im=payload.z_im)
 	task_queue.push(task)
-
 	log.info("added task", task_id=task_id, request_id=request.state.request_id)
 
 	return Task(id=task_id, z_re=payload.z_re, z_im=payload.z_im, state=State.READY, url="")
@@ -55,7 +54,7 @@ async def download(task_id: int,
 				   task_db: TaskDatabase = Depends(get_task_db),
 				   claims: dict = Depends(authenticate),
 				   object_storage=Depends(get_object_storage)):
-	""""""
+	"""Retrieve a specific fractal task and its output URL for a verified user."""
 
 	username = claims["sub"]
 	verified = await user_db.verify_user(username)
@@ -70,9 +69,9 @@ async def download(task_id: int,
 	return Task(id=task.id, z_re=task.z_re, z_im=task.z_im, state=task.state, url=url)
 
 
-@router.put("/update/{task_id}", status_code=200)
+@router.put("/update_state/{task_id}", status_code=200)
 async def update(request: Request, task_id: int, task_db: TaskDatabase = Depends(get_task_db)):
-	"""Only available within the cluster."""
+	"""Update the state of a fractal task."""
 
 	payload = await request.json()
 	await task_db.update_state(task_id, State(payload["state"]))

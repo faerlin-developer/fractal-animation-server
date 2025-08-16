@@ -1,5 +1,5 @@
 
-docker-build: task_master user_manager worker postgres frontend
+docker-build: task_master user_manager worker postgres
 
 task_master:
 	docker build \
@@ -33,14 +33,6 @@ postgres:
 		--build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
 		.
 
-frontend:
-	docker build \
-		-f deploy/docker/dockerfile.frontend \
-		-t $(FRONTEND_IMAGE) \
-		--build-arg BUILD_REF=$(VERSION) \
-		--build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
-		.
-
 docker-run-minio:
 	docker run -d \
   		--name my_minio \
@@ -54,6 +46,3 @@ docker-run-minio:
   		--network container:my_minio \
   		-e MC_HOST_local="http://minioadmin:minioadmin@localhost:9000" \
   		minio/mc mb local/images
-
-docker-run-frontend:
-	docker run --rm -p 8050:8050 faas/frontend:0.0.1

@@ -12,5 +12,6 @@
   Ingress rules. Example: traefik. It reads Kubernetes Ingress resources. Then it dynamically configures itself to
   route traffic to the appropriate services.
 - The traefik's NodePort exposes Traefik on a fixed port outside of the cluster.
+- `172.17.0.1`, that’s the default gateway IP of the Docker bridge network on Linux/macOS
 
 -->

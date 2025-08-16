@@ -129,9 +129,9 @@ def test_end_to_end():
 			print("task failed")
 			break
 		else:
-			print(f"i={i} sleeping 2 second")
+			print(f"i={i} sleeping 5 second")
 			i += 1
-			time.sleep(2)
+			time.sleep(5)
 
 	# DELETE /delete-user
 	response = delete_user(token)

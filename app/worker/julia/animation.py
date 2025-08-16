@@ -9,11 +9,9 @@ from worker.julia.image import JuliaImage
 logger = logging.getLogger(__name__)
 
 
-# def perturb_c(c0):
-#	return complex(c0.real + 0.01, c0.imag + 0.01)
-
-
 def perturb_c(c0, angle_step=0.01):
+	""""""
+
 	r = abs(c0)
 	theta = math.atan2(c0.imag, c0.real)
 	theta += angle_step
@@ -53,5 +51,4 @@ class JuliaAnimation:
 		# noinspection PyUnresolvedReferences
 		frames = [np.asarray(img) for img in images]
 		imageio.mimsave(filename, frames, fps=24)
-
 		logging.info(f"finish generating animation")

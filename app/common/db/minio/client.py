@@ -3,9 +3,9 @@ from minio import Minio
 
 class ObjectStorage:
 
-	def __init__(self, endpoint: str, access_key: str, secret_key: str):
+	def __init__(self, host: str, port: int, access_key: str, secret_key: str):
 		self.client = Minio(
-			endpoint,
+			f"{host}:{port}",
 			access_key=access_key,
 			secret_key=secret_key,
 			secure=False
