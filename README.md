@@ -2,8 +2,11 @@
 
 ![](design.png)
 
+
 <!--
 ## Notes
+
+[![Watch the video](https://raw.githubusercontent.com/username/repository/branch/path/to/thumbnail.jpg)](https://raw.githubusercontent.com/username/repository/branch/path/to/video.mp4)
 
 - RBAC grants access to pods
 - An Ingress is a Kubernetes resource that define rules for routing external HTTP(s) traffic to services inside the
