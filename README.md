@@ -2,11 +2,11 @@
 
 ![](design.png)
 
+[![Watch the video](https://github.com/faerlin-developer/fractal-animation-server/blob/8d3f6ce613a10247347e2c3c78ea60bdbaface8f/sample.mp4)](https://github.com/faerlin-developer/fractal-animation-server/blob/8d3f6ce613a10247347e2c3c78ea60bdbaface8f/sample.mp4)
 
 <!--
 ## Notes
 
-[![Watch the video](https://raw.githubusercontent.com/username/repository/branch/path/to/thumbnail.jpg)](https://raw.githubusercontent.com/username/repository/branch/path/to/video.mp4)
 
 - RBAC grants access to pods
 - An Ingress is a Kubernetes resource that define rules for routing external HTTP(s) traffic to services inside the
