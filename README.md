@@ -2,10 +2,7 @@
 
 ![](design.png)
 
-<video width="600" controls>
-  <source src="sample.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/faerlin-developer/fractal-animation-server/raw/refs/heads/main/sample.mp4
 
 <!--
 ## Notes
