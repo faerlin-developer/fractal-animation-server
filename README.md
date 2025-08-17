@@ -75,12 +75,30 @@ To get a local copy up and running follow these simple steps.
 ### Prerequisites
 
 - [Kubectl](https://kubernetes.io/docs/reference/kubectl/)
+- [Kind](https://kind.sigs.k8s.io/)
 - [Docker](https://www.docker.com/)
 
-__Important__: The application was tested on Ubuntu 24.04. Install the Docker engine without using tools such as Docker
-Desktop or Rancher Desktop.
+__Important__: The application was tested on Ubuntu 24.04. The Docker engine was installed without using tools such as
+Docker Desktop or Rancher Desktop.
 
-### Installation
+### Local Deployment
+
+The `Makefile` provide targets for deploying the application locally.
+
+```bash
+make docker-build    # Build Docker images
+make kind-create     # Create kubernetes cluster  
+make kind-load       # Load Docker images into Kubernetes cluster
+make kubectl-apply   # Create resources in Kubernetes cluster
+```
+
+To verify successful deployment, execute a complete workflow in which a user signs up for an account, submits a task to
+generate a fractal animation, waits for the task to finish, and then downloads the resulting MP4 file from the object
+storage using the pre-signed URL provided by the service:
+
+```bash
+make pytest
+```
 
 ### Usage
 
