@@ -36,7 +36,7 @@ Julia set animations in MP4 format. The high-level system design of the service 
 
 ![](design.png)
 
-For example, a 5-second animation starting at the Julia set defined at $c = (-0.80, -0.18)$ is shown below:
+For example, a 5-second animation starting with the Julia set defined at $c = (-0.80, -0.18)$ is shown below:
 
 https://github.com/user-attachments/assets/075da75b-eb61-40b1-81c0-5516d780bc2e
 
