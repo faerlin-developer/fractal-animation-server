@@ -28,8 +28,6 @@
   </ol>
 </details>
 
-<!-- ABOUT THE PROJECT -->
-
 ## About The Project
 
 __Fractal Animation Server__ is a service that generates and serves fractal visualizations (e.g. Julia set animations)
@@ -47,10 +45,10 @@ https://github.com/user-attachments/assets/075da75b-eb61-40b1-81c0-5516d780bc2e
 __API-driven__: Users can request animated fractals via RESTful endpoints. At present, the only supported fractal is the
 Julia set. The resulting animation is returned in MP4 format, showing how the Julia set evolves as parameters vary.
 
-__Microservice Architecture__: The system is built as a set of Python-based microservices running inside a Kubernetes
+__Microservice Architecture__: The system is built as a set of Python-based microservices running inside a `Kubernetes`
 cluster, orchestrated with `Traefik` as the ingress controller. User requests are received via REST endpoints, queued in
 `Redis` queue for processing, and handled by worker services that generate Julia set animations. User and task metadata
-information are persisted in Postgres, while the rendered MP4 files are stored in `MinIO` (object storage service).
+information are persisted in `Postgres`, while the rendered MP4 files are stored in `MinIO` (object storage service).
 Users can retrieve their completed fractal animations directly from object storage via pre-signed URLs.
 
 __Extensible architecture__: Easily extendable with new fractal types (e.g. Burning Ship, Newton fractals).
@@ -61,56 +59,28 @@ __Extensible architecture__: Easily extendable with new fractal types (e.g. Burn
   Kubernetes, take it apart, explore it, and study how it works from the inside.
 - __Creative art__. Generate unique Julia set animations defined at different points of the complex plane.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ### Built With
 
-* [![Next][Kubernetes]][Kubernetes-url]
+* [![Python][Python]][Python-url] [![FastAPI][FastAPI]][FastAPI-url] [![SQLAlchemy][SQLAlchemy]][SQLAlchemy-url]
+* [![Docker][Docker]][Docker-url] [![Kubernetes][Kubernetes]][Kubernetes-url]
+* [![Postgres][Postgres]][Postgres-url]
+* [![Redis][Redis]][Redis-url]
+* [Traefik][Traefik-url]
+* [MinIO][MinIO-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- GETTING STARTED -->
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
 ### Installation
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- USAGE EXAMPLES -->
-
-## Usage
-
-<!-- ROADMAP -->
-
-## Roadmap
-
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
-
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (
-and known issues).
+### Usage
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- ACKNOWLEDGMENTS -->
 
 ## Acknowledgments
 
@@ -122,11 +92,38 @@ to kick things off!
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [Kubernetes]: https://img.shields.io/badge/kubernetes-326CE5?&style=plastic&logo=kubernetes&logoColor=white
 
 [Kubernetes-url]: https://kubernetes.io/
+
+[Python]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
+
+[Python-url]: https://www.python.org/
+
+[Redis]: https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white
+
+[Redis-url]: https://redis.io/
+
+[Postgres]: https://img.shields.io/badge/PostgreSQL-316192?logo=postgresql&logoColor=white
+
+[Postgres-url]: https://www.postgresql.org/
+
+[Docker]: https://img.shields.io/badge/docker-257bd6?style=for-the-badge&logo=docker&logoColor=white
+
+[Docker-url]: https://www.docker.com/
+
+[FastAPI]: https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi
+
+[FastAPI-url]: https://fastapi.tiangolo.com/
+
+[SQLAlchemy]: https://img.shields.io/badge/SQLAlchemy-306998?logo=python&logoColor=white
+
+[SQLAlchemy-url]: https://www.sqlalchemy.org/
+
+[Traefik-url]: https://traefik.io/traefik
+
+[MinIO-url]: https://www.min.io/
 
 <!--
 ## Notes
