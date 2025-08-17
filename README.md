@@ -32,8 +32,8 @@
 
 ## About The Project
 
-__Fractal Animation Server__ is a service that generates and serves fractal visualizations (e.g. animated Julia sets) on
-demand. The application features a modern service-oriented design, exposing a simple RESTful API for users to request
+__Fractal Animation Server__ is a service that generates and serves fractal visualizations (e.g. Julia set animations)
+on demand. The application features a modern service-oriented design, exposing a simple RESTful API for users to request
 Julia set animations in MP4 format.
 
 <figure>
@@ -41,6 +41,10 @@ Julia set animations in MP4 format.
   <figcaption>Figure 1: High-level system design showing Python microservices, PostgreSQL, Redis queue, Traefik, and 
               MinIO object storage in a Kubernetes cluster.</figcaption>
 </figure>
+
+For example, a 5-second animation starting at the Julia set defined at $c = (-0.80, -0.18)$ is shown below:
+
+https://github.com/user-attachments/assets/075da75b-eb61-40b1-81c0-5516d780bc2e
 
 ### Key Features
 
@@ -60,8 +64,6 @@ __Extensible architecture__: Easily extendable with new fractal types (e.g. Burn
 - __Educational Material__. If you’re interested in learning how to build the backend of a microservice architecture on
   Kubernetes, take it apart, explore it, and study how it works from the inside.
 - __Creative art__. Generate unique Julia set animations defined at different points of the complex plane.
-
-https://github.com/user-attachments/assets/075da75b-eb61-40b1-81c0-5516d780bc2e
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
