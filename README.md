@@ -51,6 +51,9 @@ cluster, orchestrated with `Traefik` as the ingress controller. User requests ar
 information are persisted in `Postgres`, while the rendered MP4 files are stored in `MinIO` (object storage service).
 Users can retrieve their completed fractal animations directly from object storage via pre-signed URLs.
 
+__Authentication__: Users create accounts and are authenticated securely. Upon login, a JSON Web Token (JWT) is issued,
+which the client includes in subsequent requests.
+
 __Extensible architecture__: Easily extendable with new fractal types (e.g. Burning Ship, Newton fractals).
 
 ### Use Cases
@@ -65,8 +68,9 @@ __Extensible architecture__: Easily extendable with new fractal types (e.g. Burn
 * [![Docker][Docker]][Docker-url] [![Kubernetes][Kubernetes]][Kubernetes-url]
 * [![Postgres][Postgres]][Postgres-url]
 * [![Redis][Redis]][Redis-url]
-* [Traefik][Traefik-url]
-* [MinIO][MinIO-url]
+* [Kind][Kind-url] (local Kubernetes deployment)
+* [Traefik][Traefik-url] (ingress controller)
+* [MinIO][MinIO-url] (open source object storage)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -124,6 +128,8 @@ to kick things off!
 [Traefik-url]: https://traefik.io/traefik
 
 [MinIO-url]: https://www.min.io/
+
+[Kind-url]: https://kind.sigs.k8s.io/
 
 <!--
 ## Notes
