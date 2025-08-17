@@ -36,8 +36,6 @@ __Fractal Animation Server__ is a service that generates and serves fractal visu
 demand. The project combines high-performance computation with modern service-oriented design, exposing a
 simple RESTful API for users to request animated Julia sets defined at specified point complex number `c`.
 
-https://github.com/user-attachments/assets/075da75b-eb61-40b1-81c0-5516d780bc2e
-
 ### Key Features
 
 __API-driven__: Users can request animated fractals via RESTful endpoints. At present, the only supported fractal is the
@@ -56,6 +54,8 @@ __Extensible architecture__: Easily extendable with new fractal types (e.g. Burn
 - __Educational Material__. If you’re interested in learning how to build the backend of a microservice architecture on
   Kubernetes, take it apart, explore it, and study how it works from the inside.
 - __Creative art__. Generate unique Julia set animations defined at different points of the complex plane.
+
+https://github.com/user-attachments/assets/075da75b-eb61-40b1-81c0-5516d780bc2e
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
