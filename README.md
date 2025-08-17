@@ -103,7 +103,17 @@ make pytest
 
 ### Usage
 
+TODO
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Implementation Details
+
+TODO
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
 
 <!-- MARKDOWN LINKS & IMAGES -->
 
