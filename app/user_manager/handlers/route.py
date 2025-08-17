@@ -33,9 +33,7 @@ async def sign_up(request: Request, payload: UserRequest, db: UserDatabase = Dep
 
 
 @router.delete("/delete-user", status_code=204)
-async def delete_user(request: Request,
-					  db: UserDatabase = Depends(get_user_db),
-					  claims: dict = Depends(authenticate)):
+async def delete_user(request: Request, db: UserDatabase = Depends(get_user_db), claims: dict = Depends(authenticate)):
 	"""Delete a user from the database."""
 
 	username = claims["sub"]
