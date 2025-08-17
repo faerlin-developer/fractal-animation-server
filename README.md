@@ -58,16 +58,15 @@ __Extensible architecture__: Easily extendable with new fractal types (e.g. Burn
 
 ### Use Cases
 
-- __Educational Material__. If you’re interested in learning how to build the backend of a microservice architecture on
+- __Educational Material__: If you’re interested in learning how to build the backend of a microservice architecture on
   Kubernetes, take it apart, explore it, and study how it works from the inside.
-- __Creative art__. Generate unique Julia set animations defined at different points of the complex plane.
+- __Creative art__: Generate unique Julia set animations defined at different points of the complex plane.
 
 ### Built With
 
 * [![Python][Python]][Python-url] [![FastAPI][FastAPI]][FastAPI-url] [![SQLAlchemy][SQLAlchemy]][SQLAlchemy-url]
 * [![Docker][Docker]][Docker-url] [![Kubernetes][Kubernetes]][Kubernetes-url]
-* [![Postgres][Postgres]][Postgres-url]
-* [![Redis][Redis]][Redis-url]
+* [![Postgres][Postgres]][Postgres-url] [![Redis][Redis]][Redis-url]
 * [Kind][Kind-url] (local Kubernetes deployment)
 * [Traefik][Traefik-url] (ingress controller)
 * [MinIO][MinIO-url] (open source object storage)
