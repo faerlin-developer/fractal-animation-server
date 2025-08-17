@@ -41,10 +41,10 @@ __API-driven__: Users can request animated fractals via RESTful endpoints. At pr
 Julia set. The resulting animation is returned in MP4 format, showing how the Julia set evolves as parameters vary.
 
 __Microservice Architecture__: The system is built as a set of Python-based microservices running inside a `Kubernetes`
-cluster with `Traefik` as the ingress controller. User requests are received via REST endpoints, queued in
-`Redis` queue for processing, and handled by worker services that generate Julia set animations. User and task metadata
-information are persisted in `Postgres`, while the rendered MP4 files are stored in `MinIO` (object storage service).
-Users can retrieve their completed fractal animations directly from the object storage via pre-signed URLs.
+cluster with `Traefik` as the ingress controller. User requests are received via REST endpoints, queued in a `Redis`
+queue for processing, and handled by worker services that generate Julia set animations. User and task metadata are
+persisted in `Postgres`, while the rendered MP4 files are stored in `MinIO` (object storage service). Users can retrieve
+their completed fractal animations directly from the object storage via pre-signed URLs.
 
 __Authentication__: Users create accounts and are authenticated securely. Upon login, a JSON Web Token (JWT) is issued,
 which the client includes in subsequent requests.
