@@ -83,8 +83,8 @@ To get a local copy up and running follow these simple steps.
 - [Kind](https://kind.sigs.k8s.io/)
 - [Docker](https://www.docker.com/)
 
-__Important__: The application was tested on Ubuntu 24.04. The Docker engine was installed without using tools such as
-Docker Desktop or Rancher Desktop.
+__Important__: The application was tested on Ubuntu 24.04. The Docker engine was installed directly (i.e. without using
+tools such as Docker Desktop or Rancher Desktop)
 
 ### Local Deployment
 
