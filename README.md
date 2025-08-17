@@ -34,13 +34,13 @@
 
 __Fractal Animation Server__ is a service that generates and serves fractal visualizations (e.g. Julia set animations)
 on demand. The application features a modern service-oriented design, exposing a simple RESTful API for users to request
-Julia set animations in MP4 format.
+Julia set animations in MP4 format. The high-level system design of the service is shown below:
 
 <figure>
   <img src="design.png" width="850"/>
-  <figcaption>Figure 1: High-level system design showing Python microservices, PostgreSQL, Redis queue, Traefik, and 
-              MinIO object storage in a Kubernetes cluster.</figcaption>
 </figure>
+
+<br/>
 
 For example, a 5-second animation starting at the Julia set defined at $c = (-0.80, -0.18)$ is shown below:
 
