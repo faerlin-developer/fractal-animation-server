@@ -74,6 +74,12 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
+- [Kubectl](https://kubernetes.io/docs/reference/kubectl/)
+- [Docker](https://www.docker.com/)
+
+__Important__: The application was tested on Ubuntu 24.04. Install the Docker engine without using tools such as Docker
+Desktop or Rancher Desktop.
+
 ### Installation
 
 ### Usage
