@@ -86,10 +86,11 @@ Docker Desktop or Rancher Desktop.
 The `Makefile` provide targets for deploying the application locally.
 
 ```bash
-make docker-build    # Build Docker images
-make kind-create     # Create kubernetes cluster  
-make kind-load       # Load Docker images into Kubernetes cluster
-make kubectl-apply   # Create resources in Kubernetes cluster
+make docker-build       # Build Docker images
+make docker-run-minio   # Create and initialize MinIO object storage server
+make kind-create        # Create kubernetes cluster  
+make kind-load          # Load Docker images into Kubernetes cluster
+make kubectl-apply      # Create resources in Kubernetes cluster
 ```
 
 To verify successful deployment, execute a complete workflow in which a user signs up for an account, submits a task to
