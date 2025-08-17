@@ -17,14 +17,9 @@
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
+        <li><a href="#usage">Usage</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -49,7 +44,7 @@ __Microservice Architecture__: The system is built as a set of Python-based micr
 cluster, orchestrated with `Traefik` as the ingress controller. User requests are received via REST endpoints, queued in
 `Redis` queue for processing, and handled by worker services that generate Julia set animations. User and task metadata
 information are persisted in `Postgres`, while the rendered MP4 files are stored in `MinIO` (object storage service).
-Users can retrieve their completed fractal animations directly from object storage via pre-signed URLs.
+Users can retrieve their completed fractal animations directly from the object storage via pre-signed URLs.
 
 __Authentication__: Users create accounts and are authenticated securely. Upon login, a JSON Web Token (JWT) is issued,
 which the client includes in subsequent requests.
@@ -82,15 +77,6 @@ To get a local copy up and running follow these simple steps.
 ### Installation
 
 ### Usage
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## Acknowledgments
-
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites
-to kick things off!
-
-* [Img Shields](https://shields.io)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
